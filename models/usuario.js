@@ -1,11 +1,11 @@
 const {Schema,model} = require('mongoose');
 
-const Usuario = Schema ({
-    nombre: {
+const UsuarioSchema = Schema ({
+    name: {
         type: String,
         required: [true,'Name is required']
     },
-    correo: {
+    mail: {
         type: String,
         required: [true,'Mail is required'],
         unique: true
@@ -33,3 +33,5 @@ const Usuario = Schema ({
 
 
 })
+
+module.exports= model('Usuario', UsuarioSchema)
