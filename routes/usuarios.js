@@ -1,5 +1,5 @@
 const { Router } = require('express')
-const { body, check } = require('express-validator')
+const { body, check,  } = require('express-validator')
 const {
   usuariosGet,
   usuariosPut,
@@ -7,7 +7,8 @@ const {
   usuariosDelete,
   usuariosPatch,
 } = require('../controllers/usuarios')
-const { validateFields } = require('../middlewares/validateFields')
+const { validateEmail, validateRole } = require('../helpers/dbValidators')
+const { validateFields,} = require('../middlewares/validateFields')
 const Role = require('../models/role')
 
 const router = Router()
@@ -23,13 +24,11 @@ router.post(
       min: 6,
     }),
     check('name', 'el nombre es invalido').not().isEmpty(),
-    check('mail', 'Correo invalido').isEmail(),
-    check( 'rol', 'No es un rol valido' ).isIn(['VENTAS_ROLE','ADMIN_ROLE', 'USER_ROLE']),
+    /* check('mail', 'Correo invalido').isEmail(), */
+    /* check( 'role', 'No es un rol valido' ).isIn(['VENTAS_ROLE','ADMIN_ROLE', 'USER_ROLE']), */
+    check('role').custom( validateRole),  
+    /* check('mail').custom(validateEmail), */ 
     //checkear porque rompe la aplicacion
-    /* check('role').custom( async(role='') => {
-     const roleExist = await Role.findOne({role})
-     if (!roleExist) throw new Error(`the role ${role} doesent exist`) 
-    }), */
     validateFields,
   ],
   usuariosPost,

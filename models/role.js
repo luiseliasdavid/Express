@@ -7,6 +7,6 @@ const RoleSchema = Schema({
 
         
     }
-},{ collection: 'rols' })
+})
 
-module.exports= model('Role',RoleSchema)
+module.exports= model('Rols',RoleSchema) 
