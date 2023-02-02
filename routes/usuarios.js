@@ -1,5 +1,5 @@
 const { Router } = require('express')
-const { body, check } = require('express-validator')
+const { check } = require('express-validator')
 const {
   usuariosGet,
   usuariosPut,
@@ -7,22 +7,34 @@ const {
   usuariosDelete,
   usuariosPatch,
 } = require('../controllers/usuarios')
-const { validateEmail, validateRole, existUserById} = require('../helpers/dbValidators')
-const { validateFields } = require('../middlewares/validateFields')
+const {
+  validateEmail,
+  validateRole,
+  existUserById,
+} = require('../helpers/dbValidators')
+const {
+  validarJWT,
+  isAdminRole,
+  gotRole,
+  validateFields,
+} = require('../middlewares')
 const Role = require('../models/role')
-
-const router = Router() 
+const router = Router()
 
 router.get('/', usuariosGet)
 
-router.put('/:id', [
-  check('id', 'No es un ID valido').isMongoId(),
-  check('id').custom(existUserById),
-  check('role').custom(validateRole),
-  validateFields
-],usuariosPut)
+router.put(
+  '/:id',
+  [
+    check('id', 'No es un ID valido').isMongoId(),
+    check('id').custom(existUserById),
+    check('role').custom(validateRole),
+    validateFields,
+  ],
+  usuariosPut,
+)
 
-router.post( 
+router.post(
   '/',
   [
     check('password', 'El passwor de be tener al mneos 6 letras').isLength({
@@ -37,11 +49,18 @@ router.post(
   usuariosPost,
 )
 
-router.delete('/:id',[
-  check('id', 'No es un ID valido').isMongoId(),
-  check('id').custom(existUserById),
-  validateFields,
-] ,usuariosDelete)
+router.delete(
+  '/:id',
+  [
+    validarJWT,
+    /* isAdminRole, */
+    gotRole('ADMIN_ROLE', 'SELLS_ROLE'),
+    check('id', 'No es un ID valido').isMongoId(),
+    check('id').custom(existUserById),
+    validateFields,
+  ],
+  usuariosDelete,
+)
 
 router.patch('/', usuariosPatch)
 
