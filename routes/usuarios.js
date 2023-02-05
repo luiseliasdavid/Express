@@ -37,7 +37,7 @@ router.put(
 router.post(
   '/',
   [
-    check('password', 'El passwor de be tener al mneos 6 letras').isLength({
+    check('password', 'El password debe tener al mneos 6 letras').isLength({
       min: 6,
     }),
     check('name', 'el nombre es invalido').not().isEmpty(),

@@ -19,7 +19,7 @@ const UsuarioSchema = Schema({
   },
   role: {
     type: String,
-    required: true,
+    default: 'USER_ROLE',
   },
   isActive: {
     type: Boolean,
