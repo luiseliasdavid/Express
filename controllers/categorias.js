@@ -10,7 +10,7 @@ const categorysGet = async (req = request, res = response) => {
   const [total, categoria] = await Promise.all([
     Categoria.countDocuments({ isActive: true }),
     Categoria.find({ isActive: true })
-      .populate('usuario','name')
+      .populate('usuario', 'name')
       .skip(Number(desde))
       .limit(Number(limite)),
   ])
@@ -32,7 +32,7 @@ const getCategory = async (req, res = response) => {
     throw new Error(err)
   }
 }
-
+// crear categoria
 const crearCategoria = async (req, res = response) => {
   const nombre = req.body.nombre.toUpperCase()
 
@@ -57,16 +57,16 @@ const crearCategoria = async (req, res = response) => {
 
 // actualizar categoria
 const putCategory = async (req = request, res = response) => {
-  const id = req.params.id
+  const id = req.body._id
+
   const nuevoNombre = req.body.nombre.toUpperCase()
-  const usuarioNuevo = req.body.usuario
 
   try {
     const categoria = await Categoria.findByIdAndUpdate(
       id,
       { nombre: nuevoNombre },
       { new: true },
-    ).populate('usuario','name')
+    ).populate('usuario', 'name')
 
     res.json({
       msg: categoria,

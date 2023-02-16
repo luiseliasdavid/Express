@@ -1,12 +1,21 @@
 const Rols = require('../models/role')
 const Usuario = require('../models/usuario')
 
-const { Categoria } = require('../models')
+const { Categoria, Producto } = require('../models')
+
 
 const existeCategoria = async (id) => {
   const catById = await Categoria.findById(id)
   if (!catById) {
     throw new Error(`la categoria con  id: ${id},no existe`)
+  }
+}
+const existeProducto = async (id) => {
+  console.log('hola')
+  const prodById = await Producto.findById(id)
+  console.log(prodById)
+  if (!prodById) {
+    throw new Error(`la producto con  id: ${id},no existe`)
   }
 }
 
@@ -37,7 +46,15 @@ const existUserById = async (id) => {
 
   const userById = await Usuario.findById(id)
   if (!userById) {
-    throw new Error(`El id: ${id},no existe`)
+    throw new Error(`El id: ${id},no existe999`)
+  }
+}
+const existProductById = async (id) => {
+  //Verificar si el usuario existe
+
+  const prodById = await Producto.findById(id)
+  if (!prodById) {
+    throw new Error(`El producto con id: ${id},no existe`)
   }
 }
 const categoryAllredyExist = async (nombre = '') => {
@@ -48,6 +65,14 @@ const categoryAllredyExist = async (nombre = '') => {
     throw new Error(`La categoria: ${nombre},ya existe`)
   }
 }
+const productAllredyExist = async (nombre = '') => {
+  //Verificar categoria ya existe
+
+  const productByName = await Categoria.findOne({ nombre })
+  if (productByName) {
+    throw new Error(`La categoria: ${nombre},ya existe`)
+  }
+}
 
 module.exports = {
   validateRole,
@@ -55,4 +80,7 @@ module.exports = {
   existUserById,
   existeCategoria,
   categoryAllredyExist,
+  existeProducto,
+  productAllredyExist,
+  existProductById
 }

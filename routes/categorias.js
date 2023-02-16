@@ -2,7 +2,7 @@ const { Router, response } = require('express')
 const { check } = require('express-validator')
 const { crearCategoria, categorysGet, getCategory, putCategory, deleteCategory } = require('../controllers/categorias')
 const { existeCategoria, existUserById, categoryAllredyExist } = require('../helpers/dbValidators')
-const { validarJWT, gotRole } = require('../middlewares')
+const { validarJWT, gotRole, isAdminRole } = require('../middlewares')
 
 
 
@@ -20,7 +20,7 @@ router.get('/:id',[
   validateFields
 ],
  getCategory)
-
+//crear categoria
 router.post('/', 
   validarJWT,
   check('nombre','el nombre es requerido').not().isEmpty(),
@@ -30,9 +30,10 @@ router.post('/',
 //actualizar categoria
 router.put('/:id',
 [
+  validarJWT,
+  isAdminRole,
   check('id').isMongoId(),
-  check('id').custom(existeCategoria),
-  check('usuario','El usuario no es valido').custom( existUserById ),
+  check('id','el usuario no existe').custom(existUserById),
   check('nombre','La categoria ya existe').custom( categoryAllredyExist ),
   validateFields
 ],
@@ -42,7 +43,7 @@ putCategory)
 router.delete('/:id', 
 [
   validarJWT,
-  gotRole('ADMIN_ROLE'),
+  isAdminRole,
   check('id').isMongoId(),
   check('id').custom(existeCategoria),
   check('usuario','El usuario no es valido').custom( existUserById ),
